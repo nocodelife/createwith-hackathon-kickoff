@@ -250,12 +250,13 @@ h2 {
 .slide--spotlight .callout { background: rgba(255,255,255,0.06); }
 .callout strong { display:block; color: var(--accent, var(--coral)); font-size: clamp(1.4rem, 3vw, 2.3rem);
     font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4em; }
-/* Crowdfunder call-to-action link inside the mission box */
-.cf-link { display:inline-flex; align-items:center; gap:0.5em; margin-top: clamp(0.7rem,1.8vh,1.1rem);
-    border-radius:100px; padding:0.55em 1.25em; font-weight:800; font-size: clamp(0.9rem,1.5vw,1.15rem);
-    letter-spacing:-0.01em; background: var(--accent, var(--coral)); color:#161310; text-decoration:none;
-    width:fit-content; box-shadow:0 10px 28px rgba(0,0,0,0.35); transition: transform .2s var(--ease-out), box-shadow .2s; }
-.cf-link:hover { transform: translateY(-2px); box-shadow:0 14px 34px rgba(0,0,0,0.45); }
+/* Resource links inside the mission box (crowdfunder, website) */
+.link-row { display:flex; flex-wrap:wrap; gap: clamp(0.5rem,1.2vw,0.85rem); margin-top: clamp(0.7rem,1.8vh,1.1rem); }
+.cf-link { display:inline-flex; align-items:center; gap:0.4em; border-radius:100px; padding:0.5em 1.15em;
+    font-weight:700; font-size: clamp(0.9rem,1.5vw,1.12rem); letter-spacing:-0.01em; text-decoration:none;
+    color: var(--accent, var(--coral)); background: transparent; border: 1.5px solid var(--accent, var(--coral));
+    width:fit-content; transition: background .2s var(--ease-out), color .2s, transform .2s; }
+.cf-link:hover { background: var(--accent, var(--coral)); color:#161310; transform: translateY(-2px); }
 
 /* Idea-sparks label + numbered brief list */
 .spark-label { font-size: clamp(0.85rem,1.4vw,1.1rem); font-weight:700; letter-spacing:0.06em;
@@ -513,6 +514,9 @@ h2 {
         <div class="callout reveal" style="max-width:62ch">
             <strong>The mission</strong>
             Get the public to think twice before binning something — to reuse or donate it instead.
+            <div class="link-row">
+                <a class="cf-link" href="https://www.weareoverthemoon.org" target="_blank" rel="noopener">Link to website →</a>
+            </div>
         </div>
         <div class="reveal d1" style="margin-top:var(--content-gap)">
             <p class="spark-label">Idea sparks</p>
@@ -560,7 +564,10 @@ h2 {
         <div class="callout reveal" style="max-width:64ch">
             <strong>The mission</strong>
             Spread the word about their Crowdfunder to build a permanent home of their own — a dedicated art studio for the community.
-            <a class="cf-link" href="https://www.crowdfunder.co.uk/p/figment-arts-port-studio" target="_blank" rel="noopener">Back their Crowdfunder →</a>
+            <div class="link-row">
+                <a class="cf-link" href="https://www.crowdfunder.co.uk/p/figment-arts-port-studio" target="_blank" rel="noopener">Link to Crowdfunder →</a>
+                <a class="cf-link" href="https://www.figmentarts.org.uk" target="_blank" rel="noopener">Link to website →</a>
+            </div>
         </div>
         <div class="reveal d1" style="margin-top:var(--content-gap)">
             <p class="spark-label">Shaped with David at Figment Arts</p>
@@ -607,7 +614,10 @@ h2 {
         <div class="callout reveal" style="max-width:62ch">
             <strong>The mission</strong>
             Raise awareness of their Crowdfunder to create a regenerative community farm.
-            <a class="cf-link" href="https://www.crowdfunder.co.uk/p/apron-community-farm" target="_blank" rel="noopener">Back their Crowdfunder →</a>
+            <div class="link-row">
+                <a class="cf-link" href="https://www.crowdfunder.co.uk/p/apron-community-farm" target="_blank" rel="noopener">Link to Crowdfunder →</a>
+                <a class="cf-link" href="https://aproncreative.org" target="_blank" rel="noopener">Link to website →</a>
+            </div>
         </div>
         <div class="reveal d1" style="margin-top:var(--content-gap)">
             <p class="spark-label">Idea sparks</p>
