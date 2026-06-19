@@ -279,6 +279,12 @@ h2 {
 .intro-media::after { content:""; position:absolute; inset:0; border-radius:24px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12); pointer-events:none; }
 @media (max-width: 860px) { .intro-media img { height: min(32vh, 260px); } }
 @media (max-height: 640px) { .intro-media img { height: min(70vh, 360px); } }
+/* Prize product panel — contain the product on a matching light background */
+.prize-media { border-radius:24px; overflow:hidden; height:min(70vh,540px); background:#EBF2FF;
+    box-shadow:0 30px 70px rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; }
+.prize-media img { width:100%; height:100%; object-fit:contain; display:block; }
+@media (max-width: 860px) { .prize-media { height: min(40vh, 300px); } }
+@media (max-height: 640px) { .prize-media { height: min(72vh, 360px); } }
 .intro-kicker { font-family: var(--font-hand); font-size: clamp(1.2rem,2.6vw,2rem); color: var(--accent, var(--coral)); line-height:1; margin-bottom:0.5em; }
 .intro-statement { font-size: clamp(1.7rem,4.4vw,3.4rem); font-weight:900; letter-spacing:-0.035em; line-height:1.05; }
 .intro-statement .accent { color: var(--accent, var(--coral)); }
@@ -449,7 +455,7 @@ h2 {
         <h2 class="reveal d1" style="margin-bottom:var(--content-gap)">Everyone is welcome.</h2>
         <div class="grid grid--3 stagger">
             <div class="card"><div class="icon">⌨️</div><h3>You write code</h3><p>Bring your stack and ship fast — you'll feel right at home.</p></div>
-            <div class="card"><div class="icon">🤖</div><h3>You vibe-code with AI</h3><p>Prompt your way to a working product. AI is a first-class teammate.</p></div>
+            <div class="card"><div class="icon">🤖</div><h3>You vibe-code with AI</h3><p>Prompt your way to a working product. AI is a first-class collaborator.</p></div>
             <div class="card"><div class="icon">🧩</div><h3>You build no-code</h3><p>Drag, drop, connect. No-code tools count — outcomes are what matter.</p></div>
         </div>
         <p class="lead reveal d3 muted" style="margin-top:var(--content-gap)">Come for the AI, stay for the humans.</p>
@@ -467,7 +473,7 @@ h2 {
                     <div class="track-tag">Online track</div>
                     <h3>48 hours, anywhere</h3>
                 </div>
-                <p>Build remotely with your team over the weekend. Open internationally — all you need is an idea and a connection.</p>
+                <p>Build remotely over the weekend. Open internationally — all you need is an idea and a connection.</p>
                 <div class="when">19–21 June 2026</div>
             </div>
             <div class="track track--inperson">
@@ -673,17 +679,21 @@ h2 {
     </div>
 </section>
 
-<!-- ===================== LIVE DEMO (holding slide) ===================== -->
-<section class="slide slide--purple" data-title="Live demo">
-    <div class="orb orb--coral"  style="width:46vw;height:46vw;top:-16vw;left:-12vw;"></div>
-    <div class="orb orb--purple" style="width:40vw;height:40vw;bottom:-16vw;right:-10vw;"></div>
-    <div class="slide-content stagger">
-        <p class="eyebrow">Live demo</p>
-        <h2 class="display" style="font-size:var(--title-size)">Let's build something, <span class="grad-text">live</span>.</h2>
-        <p class="lead muted" style="max-width:42ch">Switching over for a quick hands-on look at how easy this can be.</p>
-        <div class="chip-row" style="margin-top:var(--content-gap)">
-            <span class="chip" style="font-size:var(--body-size); padding:0.6em 1.3em">⚡ Lovable</span>
-            <span class="chip" style="font-size:var(--body-size); padding:0.6em 1.3em">🧪 Google AI Studio</span>
+<!-- ===================== THE PRIZE ===================== -->
+<section class="slide slide--purple" data-title="The prize">
+    <div class="orb orb--coral" style="width:42vw;height:42vw;top:-14vw;right:-10vw;"></div>
+    <div class="slide-content">
+        <div class="intro-split">
+            <div class="stagger">
+                <p class="eyebrow">The prize</p>
+                <h2 class="display" style="font-size:var(--title-size)">Win a <span class="grad-text">Stream Deck Neo</span>.</h2>
+                <p class="lead muted" style="max-width:42ch">Elgato's compact 8-key control deck — tap to fire shortcuts, actions and automations, with a customisable display for whatever you need next.</p>
+                <p style="font-weight:800; color:var(--coral); font-size:var(--lead-size); margin-top:0.1em">+ Free membership of the Create With Community</p>
+                <span class="chip" style="font-size:var(--body-size); padding:0.6em 1.3em">🏆 For the standout build</span>
+            </div>
+            <div class="prize-media reveal-scale">
+                <img src="hackathon-kickoff-assets/prize-streamdeck.jpg" alt="Elgato Stream Deck Neo — a compact 8-key control deck">
+            </div>
         </div>
     </div>
 </section>
@@ -708,6 +718,21 @@ h2 {
     </style>
 </section>
 
+<!-- ===================== LIVE DEMO (holding slide) ===================== -->
+<section class="slide slide--purple" data-title="Live demo">
+    <div class="orb orb--coral"  style="width:46vw;height:46vw;top:-16vw;left:-12vw;"></div>
+    <div class="orb orb--purple" style="width:40vw;height:40vw;bottom:-16vw;right:-10vw;"></div>
+    <div class="slide-content stagger">
+        <p class="eyebrow">Live demo</p>
+        <h2 class="display" style="font-size:var(--title-size)">Let's build something, <span class="grad-text">live</span>.</h2>
+        <p class="lead muted" style="max-width:42ch">Switching over for a quick hands-on look at how easy this can be.</p>
+        <div class="chip-row" style="margin-top:var(--content-gap)">
+            <span class="chip" style="font-size:var(--body-size); padding:0.6em 1.3em">⚡ Lovable</span>
+            <span class="chip" style="font-size:var(--body-size); padding:0.6em 1.3em">🧪 Google AI Studio</span>
+        </div>
+    </div>
+</section>
+
 <!-- ===================== SLIDE 11 — NEXT STEPS / CTA ===================== -->
 <section class="slide slide--purple" data-title="Next steps">
     <div class="orb orb--purple" style="width:46vw;height:46vw;top:-16vw;left:-14vw;"></div>
@@ -719,7 +744,7 @@ h2 {
             <span style="font-weight:900;letter-spacing:-0.02em;font-size:clamp(1rem,2.4vw,1.7rem)">EVOLVE</span>
         </div>
         <p class="eyebrow" style="margin-top:0.5em">Your move</p>
-        <h2 class="display" style="font-size:var(--title-size)">Pick a cause. Form a team.<br><span class="grad-text">Start building.</span></h2>
+        <h2 class="display" style="font-size:var(--title-size)">Pick a cause.<br><span class="grad-text">Start building.</span></h2>
         <p class="lead muted" style="max-width:40ch">Questions in the chat are welcome — that's what this call is for. Let's make something Brighton will be proud of.</p>
         <p style="font-weight:800; font-size:var(--body-size); color:var(--coral); margin-top:0.1em">Submissions close 7pm (GMT) · Sunday 21 June</p>
         <div class="chip-row" style="align-items:center; gap:clamp(0.7rem,1.6vw,1.2rem); margin-top:0.2em">
