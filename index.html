@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create With × EVOLVE — Hackathon Kickoff</title>
+
+<!-- Fonts: Inter (brand) + Caveat (handwritten accent) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================================================================
+   CREATE WITH — DESIGN TOKENS
+   Change these to retheme the whole deck.
+   =========================================================================== */
+:root {
+    /* Brand colors */
+    --coral:        #F55453;
+    --coral-light:  #FF7A79;
+    --purple:       #3C296D;
+    --purple-light: #5A4299;
+    --purple-dark:  #1E1538;
+    --cream:        #FBF7F4;
+    --cream-dark:   #F5EDE8;
+    --ink:          #1A1A1A;
+    --sand-300:     #D4CEC4;
+    --sand-600:     #7A6E60;
+
+    /* Typography */
+    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-hand: 'Caveat', cursive;
+
+    /* Responsive type scale (clamp = fits any viewport) */
+    --display-size:  clamp(2.5rem, 7vw, 5rem);
+    --title-size:    clamp(1.75rem, 5vw, 3.75rem);
+    --h2-size:       clamp(1.4rem, 3.5vw, 2.5rem);
+    --lead-size:     clamp(1rem, 2vw, 1.4rem);
+    --body-size:     clamp(0.85rem, 1.4vw, 1.1rem);
+    --small-size:    clamp(0.7rem, 1.1vw, 0.9rem);
+
+    /* Spacing */
+    --slide-padding: clamp(1.75rem, 5.5vw, 5.5rem);
+    --content-gap:   clamp(1.1rem, 3vh, 2.4rem);
+
+    /* Motion */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --dur: 0.7s;
+}
+
+/* ===========================================================================
+   BASE / VIEWPORT FITTING (mandatory)
+   =========================================================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body { height: 100%; overflow-x: hidden; }
+html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+}
+body {
+    font-family: var(--font-body);
+    background: var(--purple-dark);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Each slide = exactly one viewport, never scrolls internally */
+.slide {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--slide-padding);
+}
+.slide-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-height: 100%;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+/* Hero text stacks: even, generous rhythm between each line */
+.slide-content.stagger { gap: clamp(0.6rem, 1.6vh, 1.3rem); }
+
+/* Themes ----------------------------------------------------------------- */
+.slide--cream  { background: var(--cream); color: var(--ink); }
+.slide--purple { background: var(--purple-dark); color: #fff; }
+
+/* ===========================================================================
+   TYPOGRAPHY HELPERS
+   =========================================================================== */
+.eyebrow {
+    font-family: var(--font-hand);
+    font-size: clamp(1.2rem, 2.6vw, 2rem);
+    color: var(--coral);
+    line-height: 1;
+    margin-bottom: 0.3em;
+}
+.display {
+    font-size: var(--display-size);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.04;
+}
+h1.title, .title {
+    font-size: var(--title-size);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+}
+h2 {
+    font-size: var(--h2-size);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.12;
+}
+.lead { font-size: var(--lead-size); line-height: 1.55; font-weight: 500; }
+.muted { color: var(--sand-600); }
+.slide--purple .muted { color: rgba(255,255,255,0.66); }
+
+/* Gradient headline text (coral → purple), subtly animated */
+.grad-text {
+    background: linear-gradient(90deg,#F55453 0%,#D64C57 18%,#B7455B 36%,#983E60 52%,#793764 70%,#5A3068 85%,#3C296D 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: gradShift 9s ease infinite;
+}
+/* On dark slides, shift the gradient lighter so it stays readable */
+.slide--purple .grad-text {
+    background: linear-gradient(90deg,#FF7A79 0%,#F55453 40%,#FFB199 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% 100%;
+    animation: gradShift 9s ease infinite;
+}
+@keyframes gradShift {
+    0%,100% { background-position: 0% 50%; }
+    50%     { background-position: 100% 50%; }
+}
+
+/* ===========================================================================
+   COMPONENTS
+   =========================================================================== */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    border-radius: 100px;
+    padding: 0.7em 1.4em;
+    font-weight: 700;
+    font-size: var(--body-size);
+    letter-spacing: -0.01em;
+    background: var(--coral);
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(245,84,83,0.4);
+    width: fit-content;
+}
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    border-radius: 999px;
+    padding: 0.6em 1.25em;
+    font-size: clamp(0.95rem,1.65vw,1.25rem);
+    font-weight: 600;
+    background: rgba(245,84,83,0.12);
+    color: var(--coral);
+    border: 1px solid rgba(245,84,83,0.25);
+    width: fit-content;
+}
+.slide--purple .chip,
+.slide--spotlight .chip { background: rgba(255,255,255,0.08); color:#fff; border-color: rgba(255,255,255,0.2); }
+.chip-row { display:flex; flex-wrap:wrap; gap: clamp(0.5rem,1.2vw,0.8rem); }
+
+/* Card grid */
+.grid {
+    display: grid;
+    gap: clamp(1rem, 2.2vw, 1.75rem);
+}
+.grid--2 { grid-template-columns: repeat(2, 1fr); }
+.grid--3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 720px) { .grid--2, .grid--3 { grid-template-columns: 1fr; } }
+
+.card {
+    background: #fff;
+    border-radius: 22px;
+    padding: clamp(1.1rem, 2.4vw, 1.9rem);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 14px 40px rgba(60,41,109,0.08);
+    border: 1px solid var(--sand-300);
+}
+.slide--purple .card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: none;
+    color: #fff;
+}
+/* gradient top accent on cards */
+.card::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--coral), var(--purple));
+}
+.card .icon { font-size: clamp(1.6rem, 3vw, 2.2rem); line-height: 1; margin-bottom: 0.4em; }
+.card .tag { font-size: var(--small-size); font-weight:700; color: var(--coral); letter-spacing:0.04em; text-transform:uppercase; }
+.card h3 { font-size: clamp(1rem, 1.8vw, 1.3rem); font-weight: 800; letter-spacing:-0.02em; margin: 0.15em 0 0.35em; }
+.card p  { font-size: var(--small-size); line-height: 1.4; color: var(--sand-600); }
+.slide--purple .card p { color: rgba(255,255,255,0.7); }
+
+/* Track cards (the two ways to take part) */
+.track {
+    border-radius: 24px; padding: clamp(1.2rem,2.6vw,2rem);
+    position: relative; overflow: hidden; color: #fff;
+    display:flex; flex-direction:column; gap:0.5em; min-height: clamp(160px, 28vh, 240px);
+    justify-content: space-between;
+}
+.track--online { background: linear-gradient(140deg, #5A3068, #3C296D); }
+.track--inperson { background: linear-gradient(140deg, #F55453, #D64C57); }
+.track .track-tag { font-size: var(--small-size); font-weight:700; opacity:0.85; text-transform: uppercase; letter-spacing: 0.08em; }
+.track h3 { font-size: clamp(1.3rem,3vw,2rem); font-weight:900; letter-spacing:-0.03em; }
+.track p  { font-size: var(--small-size); opacity:0.9; line-height:1.4; }
+.track .when { font-family: var(--font-hand); font-size: clamp(1.1rem,2.4vw,1.7rem); }
+
+/* Goal callout (the "brief" box on non-profit slides) */
+.callout {
+    background: rgba(245,84,83,0.08);
+    border-left: 5px solid var(--accent, var(--coral));
+    border-radius: 14px;
+    padding: clamp(1rem,2.4vw,1.7rem) clamp(1.1rem,2.6vw,1.9rem);
+    font-size: clamp(1.1rem, 2vw, 1.65rem);
+    line-height: 1.45;
+}
+.slide--purple .callout,
+.slide--spotlight .callout { background: rgba(255,255,255,0.06); }
+.callout strong { display:block; color: var(--accent, var(--coral)); font-size: clamp(1.4rem, 3vw, 2.3rem);
+    font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4em; }
+/* Crowdfunder call-to-action link inside the mission box */
+.cf-link { display:inline-flex; align-items:center; gap:0.5em; margin-top: clamp(0.7rem,1.8vh,1.1rem);
+    border-radius:100px; padding:0.55em 1.25em; font-weight:800; font-size: clamp(0.9rem,1.5vw,1.15rem);
+    letter-spacing:-0.01em; background: var(--accent, var(--coral)); color:#161310; text-decoration:none;
+    width:fit-content; box-shadow:0 10px 28px rgba(0,0,0,0.35); transition: transform .2s var(--ease-out), box-shadow .2s; }
+.cf-link:hover { transform: translateY(-2px); box-shadow:0 14px 34px rgba(0,0,0,0.45); }
+
+/* Idea-sparks label + numbered brief list */
+.spark-label { font-size: clamp(0.85rem,1.4vw,1.1rem); font-weight:700; letter-spacing:0.06em;
+    text-transform: uppercase; color: var(--sand-600); margin-bottom: 0.75em; }
+.slide--purple .spark-label,
+.slide--spotlight .spark-label { color: rgba(255,255,255,0.62); }
+.numbered { list-style:none; display:flex; flex-direction:column; gap: clamp(0.6rem,1.7vh,1.1rem); counter-reset:n; }
+.numbered li { display:flex; gap:0.85rem; align-items:flex-start; font-size: clamp(1rem,1.7vw,1.3rem); line-height:1.4; }
+.numbered li::before { counter-increment:n; content: counter(n); flex:none;
+    width:1.7em; height:1.7em; border-radius:50%; background:var(--accent, var(--coral)); color:#161310;
+    font-weight:800; font-size:0.9em; display:flex; align-items:center; justify-content:center; }
+
+/* Non-profit "spotlight" intro slides — dark stage so the artwork glows.
+   Each slide sets its own --accent (the non-profit's brand colour) via inline style. */
+.slide--spotlight { background:#161310; color:#fff; }
+.intro-split { display:grid; grid-template-columns: 1.04fr 0.96fr; gap: clamp(1.4rem,4vw,3.5rem); align-items:center; width:100%; }
+@media (max-width: 860px) { .intro-split { grid-template-columns:1fr; gap: clamp(0.9rem,3vh,1.4rem); } }
+.intro-media { position:relative; }
+.intro-media img { width:100%; height: min(74vh, 600px); object-fit:cover; border-radius:24px; box-shadow: 0 30px 70px rgba(0,0,0,0.5); display:block; }
+.intro-media::after { content:""; position:absolute; inset:0; border-radius:24px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12); pointer-events:none; }
+@media (max-width: 860px) { .intro-media img { height: min(32vh, 260px); } }
+@media (max-height: 640px) { .intro-media img { height: min(70vh, 360px); } }
+.intro-kicker { font-family: var(--font-hand); font-size: clamp(1.2rem,2.6vw,2rem); color: var(--accent, var(--coral)); line-height:1; margin-bottom:0.5em; }
+.intro-statement { font-size: clamp(1.7rem,4.4vw,3.4rem); font-weight:900; letter-spacing:-0.035em; line-height:1.05; }
+.intro-statement .accent { color: var(--accent, var(--coral)); }
+.intro-desc { font-size: var(--body-size); line-height:1.55; color: rgba(255,255,255,0.74); max-width:46ch; margin-top: clamp(0.8rem,2vh,1.4rem); }
+.intro-tag { display:inline-flex; align-items:center; gap:0.6em; margin-top: clamp(0.8rem,2vh,1.3rem); font-size: var(--small-size); font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color: var(--accent, var(--coral)); }
+.intro-tag::before { content:""; width:1.8em; height:2px; background: var(--accent,var(--coral)); display:inline-block; }
+.intro-quote { margin-top: clamp(0.8rem,2vh,1.3rem); padding-left:1rem; border-left:3px solid var(--accent,var(--coral)); font-size: var(--small-size); line-height:1.45; color: rgba(255,255,255,0.82); font-style:italic; max-width:44ch; }
+.intro-quote cite { display:block; font-style:normal; font-weight:700; opacity:0.65; margin-top:0.4em; }
+/* Structured "what they do" block: Who they help / The problem / Their solution */
+.whatwedo { display:flex; flex-direction:column; gap: clamp(0.55rem,1.5vh,1rem); margin-top: clamp(0.8rem,2vh,1.3rem); }
+.wwd-head { display:block; font-weight:800; font-size: clamp(0.82rem,1.4vw,1.05rem); text-transform:uppercase; letter-spacing:0.09em; color: var(--accent, var(--coral)); margin-bottom:0.12em; }
+.wwd-text { display:block; font-size: var(--body-size); line-height:1.4; color: rgba(255,255,255,0.82); }
+
+/* Photo mosaic (spotlight slides) — 2x2 grid of images */
+.photo-mosaic { display:grid; grid-template-columns:1fr 1fr; grid-auto-rows:1fr; gap: clamp(0.4rem,1vw,0.7rem); height: min(74vh, 600px); }
+.photo-mosaic img { width:100%; height:100%; object-fit:cover; border-radius:14px; display:block; box-shadow:0 16px 40px rgba(0,0,0,0.45); }
+@media (max-width: 860px) { .photo-mosaic { height: min(38vh, 320px); } }
+@media (max-height: 640px) { .photo-mosaic { height: min(72vh, 380px); } }
+
+/* Brief slides: a full-width photo strip fills the space below the text */
+.photo-strip { display:grid; grid-template-columns:repeat(3,1fr); gap: clamp(0.5rem,1.2vw,0.9rem); margin-top: clamp(1rem,2.6vh,1.9rem); }
+.photo-strip img { width:100%; height: clamp(120px,22vh,210px); object-fit:cover; border-radius:14px; display:block; box-shadow:0 12px 32px rgba(0,0,0,0.18); }
+@media (max-height: 600px) { .photo-strip { display:none; } }
+
+/* Hand-drawn arrow linking a non-profit's first slide to its second */
+.continue-arrow { position:absolute; bottom: clamp(1rem,3vh,2.4rem); left: var(--slide-padding);
+    z-index:3; color: var(--accent, var(--coral)); pointer-events:none; animation: arrowBob 1.8s ease-in-out infinite; }
+.continue-arrow svg { width: clamp(30px,3.6vw,48px); height:auto; display:block; filter: drop-shadow(0 3px 8px rgba(0,0,0,0.45)); }
+@keyframes arrowBob { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(9px); } }
+
+/* Stat row */
+.stats { display:flex; gap: clamp(1rem,4vw,3rem); flex-wrap:wrap; }
+.stat .num { font-size: clamp(2rem,6vw,4rem); font-weight:900; letter-spacing:-0.04em; line-height:1; }
+.stat .lbl { font-size: var(--small-size); color: var(--sand-600); font-weight:600; margin-top:0.2em; }
+.slide--purple .stat .lbl { color: rgba(255,255,255,0.66); }
+
+/* Decorative floating orbs (purple slides) */
+.orb { position:absolute; border-radius:50%; filter: blur(70px); opacity:0.5; pointer-events:none; z-index:0; }
+.orb--coral { background: radial-gradient(circle, #F55453, transparent 70%); }
+.orb--purple { background: radial-gradient(circle, #5A4299, transparent 70%); }
+.slide-content { position: relative; z-index: 1; }
+
+/* ===========================================================================
+   REVEAL ANIMATIONS — trigger via .visible (added by IntersectionObserver)
+   =========================================================================== */
+.reveal { opacity: 0; transform: translateY(28px);
+    transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out); }
+.slide.visible .reveal { opacity: 1; transform: none; }
+.reveal-scale { opacity:0; transform: scale(0.92);
+    transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-bounce); }
+.slide.visible .reveal-scale { opacity:1; transform:none; }
+
+/* Stagger */
+.slide.visible .stagger > * { animation: rise var(--dur) var(--ease-out) backwards; }
+.slide.visible .stagger > *:nth-child(1){ animation-delay:.08s }
+.slide.visible .stagger > *:nth-child(2){ animation-delay:.18s }
+.slide.visible .stagger > *:nth-child(3){ animation-delay:.28s }
+.slide.visible .stagger > *:nth-child(4){ animation-delay:.38s }
+.slide.visible .stagger > *:nth-child(5){ animation-delay:.48s }
+.slide.visible .stagger > *:nth-child(6){ animation-delay:.58s }
+@keyframes rise { from { opacity:0; transform: translateY(26px); } to { opacity:1; transform:none; } }
+
+/* delay helpers for non-stagger reveals */
+.d1 { transition-delay:.12s } .d2 { transition-delay:.24s } .d3 { transition-delay:.36s } .d4 { transition-delay:.48s }
+
+/* ===========================================================================
+   CHROME: progress bar, nav dots, hint
+   =========================================================================== */
+.progress { position: fixed; top:0; left:0; height:4px; width:0;
+    background: linear-gradient(90deg, var(--coral), var(--purple)); z-index: 100; transition: width .25s var(--ease-out); }
+.nav-dots { position: fixed; right: clamp(0.6rem,2vw,1.6rem); top:50%; transform: translateY(-50%);
+    display:flex; flex-direction:column; gap:0.7rem; z-index: 100; }
+.nav-dots button { width:11px; height:11px; border-radius:50%; border:2px solid var(--sand-600);
+    background: transparent; cursor:pointer; padding:0; transition: all .25s var(--ease-out); }
+.nav-dots button.active { background: var(--coral); border-color: var(--coral); transform: scale(1.25); }
+.hint { position: fixed; bottom: clamp(0.8rem,2vh,1.4rem); left:50%; transform: translateX(-50%);
+    font-size: var(--small-size); color: var(--sand-600); z-index:100; letter-spacing:0.02em; opacity:0.8;
+    background: rgba(255,255,255,0.6); backdrop-filter: blur(6px); padding:0.4em 1em; border-radius:999px; }
+.slide--purple ~ .hint { color: #fff; }
+
+/* ===========================================================================
+   RESPONSIVE / SHORT VIEWPORTS
+   =========================================================================== */
+@media (max-height: 820px) {
+    :root {
+        --slide-padding: clamp(1rem,3.5vw,3rem);
+        --content-gap:   clamp(0.7rem,1.8vh,1.4rem);
+        --display-size:  clamp(2rem,5.5vw,3.6rem);
+        --title-size:    clamp(1.5rem,4vw,2.9rem);
+        --h2-size:       clamp(1.25rem,3.2vw,2.1rem);
+    }
+    .slide-content.stagger { gap: clamp(0.45rem,1.2vh,0.9rem); }
+    .intro-statement { font-size: clamp(1.5rem,3.6vw,2.6rem); }
+}
+@media (max-height: 560px) { .nav-dots, .hint { display:none; } .card .icon { display:none; } }
+@media (max-width: 600px)  { .nav-dots { display:none; } }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration:.01ms !important; transition-duration:.2s !important; }
+    html { scroll-behavior:auto; }
+    .grad-text { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+
+<!-- ===================== SLIDE 1 — TITLE ===================== -->
+<section class="slide slide--purple" data-title="Welcome">
+    <div class="orb orb--coral"  style="width:42vw;height:42vw;top:-10vw;right:-8vw;"></div>
+    <div class="orb orb--purple" style="width:48vw;height:48vw;bottom:-18vw;left:-12vw;"></div>
+    <div class="slide-content stagger">
+        <div class="lockup" style="display:flex;align-items:center;gap:clamp(0.6rem,1.5vw,1rem)">
+            <img class="logo" src="hackathon-kickoff-assets/cw_logo_white.svg" alt="Create With" style="height:clamp(28px,4vw,44px)">
+            <span style="opacity:0.5;font-weight:300;font-size:clamp(1rem,2vw,1.5rem)">×</span>
+            <span style="font-weight:900;letter-spacing:-0.02em;font-size:clamp(1rem,2.4vw,1.7rem)">EVOLVE</span>
+        </div>
+        <p class="eyebrow" style="margin-top:0.6em">Kickoff call</p>
+        <h1 class="display">Build for good.<br><span class="grad-text">Build for Brighton.</span></h1>
+        <p class="lead muted" style="max-width:34ch">A weekend hackathon with a social mission — let's get you ready to build.</p>
+        <span class="pill">Let's go →</span>
+    </div>
+</section>
+
+<!-- ===================== SLIDE 2 — THE MISSION ===================== -->
+<section class="slide slide--cream" data-title="The mission">
+    <div class="slide-content">
+        <p class="eyebrow reveal">The mission</p>
+        <h2 class="reveal d1">Build something <span class="grad-text">worth sharing</span>.</h2>
+        <p class="lead reveal d2" style="max-width:52ch; margin-top:var(--content-gap)">
+            Make something that raises awareness for one of our non-profits — something they could send
+            straight to their donors to spark real engagement. We've kept the brief wide open on purpose:
+            this is about creativity, not building internal tools.
+        </p>
+        <div class="reveal d3" style="margin-top:var(--content-gap)">
+            <p class="spark-label">For example, someone might build…</p>
+            <div class="grid grid--2">
+                <div class="card"><div class="icon">📸</div><h3>Scrap, reimagined</h3><p>Snap a photo of something you'd throw away and get ideas for giving it a second life.</p></div>
+                <div class="card"><div class="icon">🌱</div><h3>Grow Together</h3><p>A little game where you nurture a thriving, sustainable virtual garden.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== SLIDE — EVERYONE WELCOME ===================== -->
+<section class="slide slide--cream" data-title="Who it's for">
+    <div class="slide-content">
+        <p class="eyebrow reveal">No gatekeeping here</p>
+        <h2 class="reveal d1" style="margin-bottom:var(--content-gap)">Everyone is welcome.</h2>
+        <div class="grid grid--3 stagger">
+            <div class="card"><div class="icon">⌨️</div><h3>You write code</h3><p>Bring your stack and ship fast — you'll feel right at home.</p></div>
+            <div class="card"><div class="icon">🤖</div><h3>You vibe-code with AI</h3><p>Prompt your way to a working product. AI is a first-class teammate.</p></div>
+            <div class="card"><div class="icon">🧩</div><h3>You build no-code</h3><p>Drag, drop, connect. No-code tools count — outcomes are what matter.</p></div>
+        </div>
+        <p class="lead reveal d3 muted" style="margin-top:var(--content-gap)">Come for the AI, stay for the humans.</p>
+    </div>
+</section>
+
+<!-- ===================== SLIDE 5 — HOW IT WORKS / TRACKS ===================== -->
+<section class="slide slide--cream" data-title="How it works">
+    <div class="slide-content">
+        <p class="eyebrow reveal">How it works</p>
+        <h2 class="reveal d1" style="margin-bottom:var(--content-gap)">Two ways to take part.</h2>
+        <div class="grid grid--2 stagger">
+            <div class="track track--online">
+                <div>
+                    <div class="track-tag">Online track</div>
+                    <h3>48 hours, anywhere</h3>
+                </div>
+                <p>Build remotely with your team over the weekend. Open internationally — all you need is an idea and a connection.</p>
+                <div class="when">19–21 June 2026</div>
+            </div>
+            <div class="track track--inperson">
+                <div>
+                    <div class="track-tag">In-person track</div>
+                    <h3>One day at the Brighton Centre</h3>
+                </div>
+                <p>Build in the room with mentors, energy and fellow makers. Part of the EVOLVE conference.</p>
+                <div class="when">25 June 2026</div>
+            </div>
+        </div>
+        <p class="reveal d3 muted" style="font-size:var(--small-size); margin-top:var(--content-gap)">Pick the track that fits your weekend — or do both.</p>
+    </div>
+</section>
+
+<!-- ===================== SLIDE — MEET THE NON-PROFITS ===================== -->
+<section class="slide slide--purple" data-title="The non-profits">
+    <div class="orb orb--purple" style="width:46vw;height:46vw;top:-16vw;left:-14vw;"></div>
+    <div class="slide-content">
+        <p class="eyebrow reveal">Who you're building for</p>
+        <h2 class="reveal d1">Three Brighton non-profits. <span class="grad-text">Pick one.</span></h2>
+        <p class="lead reveal d2 muted" style="max-width:50ch; margin: var(--content-gap) 0">
+            Each one has a real awareness goal. Three felt like the sweet spot — enough choice to find a cause
+            you care about, without being spoilt for it.
+        </p>
+        <div class="grid grid--3 stagger">
+            <div class="card"><span class="tag">Sustainability</span><h3>Over The Moon</h3><p>Turning scrap donations into community art.</p></div>
+            <div class="card"><span class="tag">Creativity & inclusion</span><h3>Figment Arts</h3><p>Art that supports neurodivergent adults and families.</p></div>
+            <div class="card"><span class="tag">Community & nature</span><h3>Apron Creative</h3><p>Natural spaces where communities come together to grow.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ SLIDE 7 — OVER THE MOON · SPOTLIGHT ============ -->
+<section class="slide slide--spotlight" data-title="Over The Moon" style="--accent:#3FA15A">
+    <div class="continue-arrow" aria-hidden="true"><svg viewBox="0 0 48 84" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 6 C 20 26, 28 44, 23 64" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M12 51 C 16 59, 20 64, 23 66" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M35 50 C 30 59, 26 64, 23 66" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+    <div class="slide-content">
+        <div class="intro-split">
+            <div class="stagger">
+                <p class="intro-kicker">Over the Moon</p>
+                <h2 class="intro-statement">What if nothing was ever <span class="accent">just rubbish?</span></h2>
+                <div class="whatwedo">
+                    <div><span class="wwd-head">Who they help</span><span class="wwd-text">Families, children and adults across Adur and Brighton — and the planet.</span></div>
+                    <div><span class="wwd-head">The problem</span><span class="wwd-text">Useful materials get binned instead of reused, and getting creative can be costly.</span></div>
+                    <div><span class="wwd-head">Their solution</span><span class="wwd-text">Scrapstores that redistribute donated materials cheaply, with low-cost spaces to make and reuse.</span></div>
+                </div>
+            </div>
+            <div class="photo-mosaic reveal-scale">
+                <img src="hackathon-kickoff-assets/over-the-moon.jpg" alt="Children and adults making things with their hands at an Over the Moon session">
+                <img src="hackathon-kickoff-assets/otm-2.jpg" alt="A creative reuse workshop at Over the Moon">
+                <img src="hackathon-kickoff-assets/otm-3.jpg" alt="Colourful donated materials ready for creative reuse">
+                <img src="hackathon-kickoff-assets/otm-4.jpg" alt="Reclaimed fabrics and craft materials">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== SLIDE 8 — OVER THE MOON · BRIEF ===================== -->
+<section class="slide slide--spotlight" data-title="Over The Moon brief" style="--accent:#3FA15A">
+    <div class="slide-content">
+        <div class="callout reveal" style="max-width:62ch">
+            <strong>The mission</strong>
+            Get the public to think twice before binning something — to reuse or donate it instead.
+        </div>
+        <div class="reveal d1" style="margin-top:var(--content-gap)">
+            <p class="spark-label">Idea sparks</p>
+            <div class="chip-row">
+                <span class="chip">A fresh website to replace their current one</span>
+                <span class="chip">An app that reveals the hidden value of your scrap</span>
+                <span class="chip">Reuse-or-donate, made playful</span>
+            </div>
+        </div>
+        <div class="photo-strip reveal-scale">
+            <img src="hackathon-kickoff-assets/otm-5.jpg" alt="Hands at an Over the Moon creative session">
+            <img src="hackathon-kickoff-assets/otm-6.jpg" alt="A creative reuse workshop in progress">
+            <img src="hackathon-kickoff-assets/otm-7.jpg" alt="Making something new from reclaimed materials">
+        </div>
+    </div>
+</section>
+
+<!-- ============ SLIDE 9 — FIGMENT ARTS · SPOTLIGHT ============ -->
+<section class="slide slide--spotlight" data-title="Figment Arts" style="--accent:#FFB41D">
+    <div class="continue-arrow" aria-hidden="true"><svg viewBox="0 0 48 84" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 6 C 20 26, 28 44, 23 64" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M12 51 C 16 59, 20 64, 23 66" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M35 50 C 30 59, 26 64, 23 66" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+    <div class="slide-content">
+        <div class="intro-split">
+            <div class="stagger">
+                <p class="intro-kicker">Figment Arts</p>
+                <h2 class="intro-statement">Art that gives a voice to those <span class="accent">too often left out.</span></h2>
+                <div class="whatwedo">
+                    <div><span class="wwd-head">Who they help</span><span class="wwd-text">Learning-disabled, autistic and neurodivergent adults, plus families facing hardship in coastal West Sussex.</span></div>
+                    <div><span class="wwd-head">The problem</span><span class="wwd-text">Neighbourhoods with little access to arts and culture, where voices too often go unheard.</span></div>
+                    <div><span class="wwd-head">Their solution</span><span class="wwd-text">Supported studios, free workshops and exhibitions where people make art about their own lives.</span></div>
+                </div>
+            </div>
+            <div class="photo-mosaic reveal-scale">
+                <img src="hackathon-kickoff-assets/figment.jpg" alt="A vivid communal painting mapping what a local community loves about where they live">
+                <img src="hackathon-kickoff-assets/figment-2.jpg" alt="A large colourful communal painting made together">
+                <img src="hackathon-kickoff-assets/figment-3.jpg" alt="A Figment artist painting at an easel">
+                <img src="hackathon-kickoff-assets/figment-4.jpg" alt="Colourful artwork created in Figment workshops">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== SLIDE 10 — FIGMENT ARTS · BRIEF ===================== -->
+<section class="slide slide--spotlight" data-title="Figment Arts brief" style="--accent:#FFB41D">
+    <div class="slide-content">
+        <div class="callout reveal" style="max-width:64ch">
+            <strong>The mission</strong>
+            Spread the word about their Crowdfunder to build a permanent home of their own — a dedicated art studio for the community.
+            <a class="cf-link" href="https://www.crowdfunder.co.uk/p/figment-arts-port-studio" target="_blank" rel="noopener">Back their Crowdfunder →</a>
+        </div>
+        <div class="reveal d1" style="margin-top:var(--content-gap)">
+            <p class="spark-label">Shaped with David at Figment Arts</p>
+            <ol class="numbered">
+                <li><span>A responsive <strong>feedback wall</strong>, where supporters and audiences can post their thoughts in a visually engaging way.</span></li>
+                <li><span>An embeddable <strong>fundraising thermometer</strong>, live-linked to the Crowdfunder to show progress toward the target.</span></li>
+            </ol>
+        </div>
+        <div class="photo-strip reveal-scale">
+            <img src="hackathon-kickoff-assets/figment-5.jpg" alt="People making art together at a Figment workshop">
+            <img src="hackathon-kickoff-assets/figment-6.jpg" alt="A colourful Figment Arts workshop in progress">
+            <img src="hackathon-kickoff-assets/figment-7.jpg" alt="A hand-painted artwork made at Figment Arts">
+        </div>
+    </div>
+</section>
+
+<!-- ============ SLIDE 11 — APRON CREATIVE · SPOTLIGHT ============ -->
+<section class="slide slide--spotlight" data-title="Apron Creative" style="--accent:#D97A3D">
+    <div class="continue-arrow" aria-hidden="true"><svg viewBox="0 0 48 84" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 6 C 20 26, 28 44, 23 64" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M12 51 C 16 59, 20 64, 23 66" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/><path d="M35 50 C 30 59, 26 64, 23 66" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></div>
+    <div class="slide-content">
+        <div class="intro-split">
+            <div class="stagger">
+                <p class="intro-kicker">Apron Creative</p>
+                <h2 class="intro-statement">The best things grow when <span class="accent">we grow them together.</span></h2>
+                <div class="whatwedo">
+                    <div><span class="wwd-head">Who they help</span><span class="wwd-text">The diverse local community around Lancing and Shoreham — beginning with families.</span></div>
+                    <div><span class="wwd-head">The problem</span><span class="wwd-text">Too few local spaces to get creative outdoors, connect and grow — on land left disused.</span></div>
+                    <div><span class="wwd-head">Their solution</span><span class="wwd-text">Turning neglected land into thriving community gardens, and now a farm, for food, skills and nature.</span></div>
+                </div>
+            </div>
+            <div class="photo-mosaic reveal-scale">
+                <img src="hackathon-kickoff-assets/apron.jpg" alt="An adult and a child making leaf prints together in warm autumn colours">
+                <img src="hackathon-kickoff-assets/apron-2.jpg" alt="Volunteers building raised beds at the community garden">
+                <img src="hackathon-kickoff-assets/apron-3.jpg" alt="Raised garden beds at Apron Creative">
+                <img src="hackathon-kickoff-assets/apron-4.jpg" alt="Fresh produce growing in the community garden">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== SLIDE 12 — APRON CREATIVE · BRIEF ===================== -->
+<section class="slide slide--spotlight" data-title="Apron Creative brief" style="--accent:#D97A3D">
+    <div class="slide-content">
+        <div class="callout reveal" style="max-width:62ch">
+            <strong>The mission</strong>
+            Raise awareness of their Crowdfunder to create a regenerative community farm.
+            <a class="cf-link" href="https://www.crowdfunder.co.uk/p/apron-community-farm" target="_blank" rel="noopener">Back their Crowdfunder →</a>
+        </div>
+        <div class="reveal d1" style="margin-top:var(--content-gap)">
+            <p class="spark-label">Idea sparks</p>
+            <div class="chip-row">
+                <span class="chip">Get people excited about community farming</span>
+                <span class="chip">Make biodiversity tangible</span>
+                <span class="chip">Climate resilience, told playfully</span>
+            </div>
+        </div>
+        <div class="photo-strip reveal-scale">
+            <img src="hackathon-kickoff-assets/apron-5.jpg" alt="A harvest of fresh produce from the community garden">
+            <img src="hackathon-kickoff-assets/apron-6.jpg" alt="People together in the community garden">
+            <img src="hackathon-kickoff-assets/apron-7.jpg" alt="Planting and growing at Apron Creative">
+        </div>
+    </div>
+</section>
+
+<!-- ===================== DELIVERABLES ===================== -->
+<section class="slide slide--purple" data-title="What to submit">
+    <div class="orb orb--purple" style="width:44vw;height:44vw;top:-16vw;right:-12vw;"></div>
+    <div class="slide-content">
+        <p class="eyebrow reveal">What we're looking for</p>
+        <h2 class="reveal d1">Bring ideas, <span class="grad-text">not perfection</span>.</h2>
+        <p class="lead reveal d2 muted" style="max-width:58ch; margin: var(--content-gap) 0">
+            We're not expecting complex or fully-formed apps. What matters most is a fresh idea — and a simple,
+            working prototype of the one key feature that brings it to life.
+        </p>
+        <div class="reveal d3">
+            <p class="spark-label">To submit</p>
+            <div class="grid grid--3 stagger">
+                <div class="card"><div class="icon">📸</div><h3>A few screenshots</h3><p>Show us what you built.</p></div>
+                <div class="card"><div class="icon">📝</div><h3>A short write-up</h3><p>The idea, in a few lines.</p></div>
+                <div class="card"><div class="icon">🔗</div><h3>A live link <span style="opacity:.55;font-weight:600">(optional)</span></h3><p>Amazing if you have one — but absolutely not required.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== LIVE DEMO (holding slide) ===================== -->
+<section class="slide slide--purple" data-title="Live demo">
+    <div class="orb orb--coral"  style="width:46vw;height:46vw;top:-16vw;left:-12vw;"></div>
+    <div class="orb orb--purple" style="width:40vw;height:40vw;bottom:-16vw;right:-10vw;"></div>
+    <div class="slide-content stagger">
+        <p class="eyebrow">Live demo</p>
+        <h2 class="display" style="font-size:var(--title-size)">Let's build something, <span class="grad-text">live</span>.</h2>
+        <p class="lead muted" style="max-width:42ch">Switching over for a quick hands-on look at how easy this can be.</p>
+        <div class="chip-row" style="margin-top:var(--content-gap)">
+            <span class="chip" style="font-size:var(--body-size); padding:0.6em 1.3em">⚡ Lovable</span>
+            <span class="chip" style="font-size:var(--body-size); padding:0.6em 1.3em">🧪 Google AI Studio</span>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== TIMELINE ===================== -->
+<section class="slide slide--cream" data-title="Timeline">
+    <div class="slide-content">
+        <p class="eyebrow reveal">Key dates</p>
+        <h2 class="reveal d1" style="margin-bottom:calc(var(--content-gap)*1.2)">Mark your calendar.</h2>
+        <div class="timeline stagger" style="display:flex;flex-direction:column;gap:clamp(0.6rem,1.6vh,1.2rem);position:relative;padding-left:1.6rem">
+            <div class="tl-item"><div class="tl-date" style="font-weight:800;font-size:var(--body-size)">Fri 19 – Sun 21 June</div><div class="tl-desc muted" style="font-size:var(--small-size)">Online track build window. Submissions close at <strong style="color:var(--coral)">7pm on Sunday 21 June</strong>.</div></div>
+            <div class="tl-item"><div class="tl-date" style="font-weight:800;font-size:var(--body-size)">Wed 25 June · Brighton Centre</div><div class="tl-desc muted" style="font-size:var(--small-size)">In-person build day at EVOLVE — mentors, demos and good company.</div></div>
+            <div class="tl-item"><div class="tl-date" style="font-weight:800;font-size:var(--body-size)">Fri 26 June · on the EVOLVE stage</div><div class="tl-desc muted" style="font-size:var(--small-size)">Winners announced and projects celebrated.</div></div>
+        </div>
+    </div>
+    <style>
+        .timeline::before { content:""; position:absolute; left:7px; top:6px; bottom:6px; width:2px;
+            background: linear-gradient(180deg, var(--coral), var(--purple)); }
+        .tl-item { position: relative; }
+        .tl-item::before { content:""; position:absolute; left:-1.6rem; top:0.35em; width:14px; height:14px; border-radius:50%;
+            background: var(--coral); box-shadow: 0 0 0 4px rgba(245,84,83,0.18); }
+    </style>
+</section>
+
+<!-- ===================== SLIDE 11 — NEXT STEPS / CTA ===================== -->
+<section class="slide slide--purple" data-title="Next steps">
+    <div class="orb orb--purple" style="width:46vw;height:46vw;top:-16vw;left:-14vw;"></div>
+    <div class="orb orb--coral"  style="width:34vw;height:34vw;bottom:-12vw;right:-8vw;"></div>
+    <div class="slide-content stagger">
+        <div class="lockup" style="display:flex;align-items:center;gap:clamp(0.6rem,1.5vw,1rem)">
+            <img class="logo" src="hackathon-kickoff-assets/cw_logo_white.svg" alt="Create With" style="height:clamp(28px,4vw,44px)">
+            <span style="opacity:0.5;font-weight:300;font-size:clamp(1rem,2vw,1.5rem)">×</span>
+            <span style="font-weight:900;letter-spacing:-0.02em;font-size:clamp(1rem,2.4vw,1.7rem)">EVOLVE</span>
+        </div>
+        <p class="eyebrow" style="margin-top:0.5em">Your move</p>
+        <h2 class="display" style="font-size:var(--title-size)">Pick a cause. Form a team.<br><span class="grad-text">Start building.</span></h2>
+        <p class="lead muted" style="max-width:40ch">Questions in the chat are welcome — that's what this call is for. Let's make something Brighton will be proud of.</p>
+        <span class="pill">createwith.com/hackathon →</span>
+    </div>
+</section>
+
+<p class="hint" id="hint">Use ← → or scroll · press F for fullscreen</p>
+
+<script>
+/* ===========================================================================
+   SLIDE PRESENTATION CONTROLLER
+   - Keyboard (arrows / space / home / end / F)
+   - Scroll-snap + wheel + touch all work natively via CSS scroll-snap
+   - IntersectionObserver toggles .visible to fire entrance animations
+   - Progress bar + clickable nav dots
+   =========================================================================== */
+(function () {
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const progress = document.getElementById('progress');
+    const dotsWrap = document.getElementById('navDots');
+    let current = 0;
+
+    // Build nav dots
+    slides.forEach((s, i) => {
+        const b = document.createElement('button');
+        b.setAttribute('aria-label', (s.dataset.title || ('Slide ' + (i+1))));
+        b.addEventListener('click', () => goTo(i));
+        dotsWrap.appendChild(b);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    function goTo(i) {
+        current = Math.max(0, Math.min(slides.length - 1, i));
+        slides[current].scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Reveal animations + active-state tracking
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting && e.intersectionRatio > 0.5) {
+                e.target.classList.add('visible');
+                const idx = slides.indexOf(e.target);
+                current = idx;
+                dots.forEach((d, di) => d.classList.toggle('active', di === idx));
+                progress.style.width = (((idx + 1) / slides.length) * 100) + '%';
+            }
+        });
+    }, { threshold: [0.5, 0.75] });
+    slides.forEach(s => io.observe(s));
+    slides[0].classList.add('visible');
+    dots[0].classList.add('active');
+    progress.style.width = (100 / slides.length) + '%';
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (['ArrowDown','ArrowRight',' ','PageDown'].includes(e.key)) { e.preventDefault(); goTo(current + 1); }
+        else if (['ArrowUp','ArrowLeft','PageUp'].includes(e.key)) { e.preventDefault(); goTo(current - 1); }
+        else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+        else if (e.key === 'End')  { e.preventDefault(); goTo(slides.length - 1); }
+        else if (e.key === 'f' || e.key === 'F') {
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+            else document.exitFullscreen?.();
+        }
+    });
+})();
+</script>
+</body>
+</html>
